@@ -1,0 +1,36 @@
+{
+    "name":         "ingenerator/be_entity",
+    "description":  "Doctrine 2 entity factory and expectation testing helper framework for Behat",
+    "keywords":     ["web", "testing", "behat", "doctrine2"],
+    "homepage":     "http://github.com/ingenerator/be_entity",
+    "type":         "library",
+    "license":      "BSD",
+
+    "authors": [
+        {
+            "name":      "Andrew Coulton",
+            "email":     "andrew@ingenerator.com",
+            "homepage":  "http://ingenerator.com"
+        }
+    ],
+
+    "require": {
+        "php":              ">=5.3.1",
+        "behat/behat":      ">=2.4",
+        "doctrine/orm":     ">=2.3"
+    },
+
+    "require-dev": {
+        "phpspec/phpspec":  "2.0.*@dev"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "Ingenerator\\BeEntity": "src/"
+        }
+    },
+
+    "config": {
+        "bin-dir": "bin"
+    }
+}

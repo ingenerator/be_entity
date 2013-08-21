@@ -13,7 +13,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 // Use the spec fixture implementation of the entity factory and entity class
-require_once(__DIR__.'/Example.php');
+require_once(__DIR__.'/../../../support/Ingenerator/BeEntity/Factory/Example.php');
 
 /**
  * Specifications for the Example factory - which shows a simple implementation of an entity factory instance - these

@@ -37,7 +37,7 @@ abstract class Factory {
 	 *
 	 * @param EntityManager $entity_manager the Doctrine entity manager that will be used to find and persist entities
 	 *
-	 * @return void
+	 * @return \Ingenerator\BeEntity\Factory
 	 */
 	public function __construct(EntityManager $entity_manager)
 	{

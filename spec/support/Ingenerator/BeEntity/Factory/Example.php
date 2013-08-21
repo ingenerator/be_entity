@@ -46,6 +46,16 @@ class Example extends \Ingenerator\BeEntity\Factory
 		return $entity;
 	}
 
+	/**
+	 * Expose the entity manager for testing that the correct instance was passed in
+	 *
+	 * @return \Doctrine\ORM\EntityManager the entity manager
+	 */
+	public function get_entity_manager()
+	{
+		return $this->entity_manager;
+	}
+
 }
 
 /**

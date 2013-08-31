@@ -101,7 +101,7 @@ class BeEntityContext extends BehatContext {
 		$factory = $this->get_factory($type);
 
 		// Iterate over the table and create the entities
-		$entities = $entities->getRowsHash();
+		$entities = $entities->getHash();
 		foreach ($entities as $entity_values)
 		{
 			// The identifier is the first column of the table

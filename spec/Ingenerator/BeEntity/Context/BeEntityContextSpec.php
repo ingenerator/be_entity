@@ -9,6 +9,7 @@
 
 namespace spec\Ingenerator\BeEntity\Context;
 
+use Behat\Gherkin\Node\TableNode;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -96,12 +97,11 @@ class BeEntityContextSpec extends ObjectBehavior
 	 * @param \Doctrine\ORM\EntityManager          $entity_manager the entity manager
 	 * @param \Ingenerator\BeEntity\Factory        $factory        the entity factory mock
 	 * @param \Ingenerator\BeEntity\FactoryManager $manager        the factory manager mock
-	 * @param \Behat\Gherkin\Node\TableNode        $table          the gherkin table mock
 	 *
 	 * @return void
 	 * @see \Ingenerator\BeEntity\Context\BeEntityContext::given_entities
 	 */
-	public function it_can_populate_a_set_of_entities_from_a_table($entity_manager, $factory, $manager, $table)
+	public function it_can_populate_a_set_of_entities_from_a_table($entity_manager, $factory, $manager)
 	{
 		$manager->create_factory('Dummy')->willReturn($factory);
 		$this->set_factory_manager($manager);
@@ -110,7 +110,11 @@ class BeEntityContextSpec extends ObjectBehavior
 		$data_1 = array('title' => 'This is title 1', 'active' => TRUE, 'custom' => 'other1');
 		$data_2 = array('title' => 'This is title 2', 'active' => TRUE, 'custom' => 'other2');
 		$data_3 = array('title' => 'This is title 3', 'active' => FALSE, 'custom' => 'other3');
-		$table->getRowsHash()->willReturn(array($data_1, $data_2, $data_3));
+		$table = new TableNode();
+		$table->addRow(array_keys($data_1));
+		$table->addRow($data_1);
+		$table->addRow($data_2);
+		$table->addRow($data_3);
 
 		// The factory should be asked to provide entities for each row in the table, with the first column as identifier
 		$factory->provide('This is title 1', $data_1)->shouldBeCalled();

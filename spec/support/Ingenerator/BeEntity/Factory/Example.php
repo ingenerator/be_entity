@@ -47,6 +47,22 @@ class Example extends \Ingenerator\BeEntity\Factory
 	}
 
 	/**
+	 * Implement this method to delete all entities of the type managed by this factory.
+	 *
+	 * For example, you could just issue a DQL delete in this method.
+	 *
+	 * @return void
+	 */
+	public function purge()
+	{
+		$this->entity_manager->createQueryBuilder()
+			->delete('Ingenerator\BeEntity\Factory\ExampleEntity', 'e')
+	        ->getQuery()
+	        ->execute();
+	}
+
+
+	/**
 	 * Expose the entity manager for testing that the correct instance was passed in
 	 *
 	 * @return \Doctrine\ORM\EntityManager the entity manager

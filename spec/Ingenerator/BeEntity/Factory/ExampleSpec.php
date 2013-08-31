@@ -176,4 +176,24 @@ class ExampleSpec extends ObjectBehavior
 		$entity_manager->persist($new_entity)->shouldHaveBeenCalled();
 	}
 
+	/**
+	 * The factory should be able to delete all entities of a given type - this is an example, and will require to be
+	 * implemented in each factory
+	 *
+	 * @param \Doctrine\ORM\EntityManager    $entity_manager
+	 * @param \Doctrine\ORM\QueryBuilder     $builder
+	 * @param \Doctrine\ORM\AbstractQuery    $query
+	 *
+	 * @return void
+	 */
+	public function it_can_purge_all_entities_of_its_type($entity_manager, $builder, $query)
+	{
+		$entity_manager->createQueryBuilder()->willReturn($builder);
+		$builder->delete('Ingenerator\BeEntity\Factory\ExampleEntity', 'e')->shouldBeCalled()->willReturn($builder);
+		$builder->getQuery()->willReturn($query);
+		$query->execute()->shouldBeCalled();
+
+		$this->purge();
+	}
+
 }

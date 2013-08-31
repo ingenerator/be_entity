@@ -121,10 +121,38 @@ class BeEntityContextSpec extends ObjectBehavior
 		$factory->provide('This is title 2', $data_2)->shouldBeCalled();
 		$factory->provide('This is title 3', $data_3)->shouldBeCalled();
 
+		// If not requested explicitly, the purge method should not be called
+		$factory->purge()->shouldNotBeCalled();
+
 		// After all done, the entity manager should be flushed
 		$entity_manager->flush()->shouldBeCalled();
 
-		$this->given_entities('Dummy', $table);
+		$this->given_entities('', 'Dummy', $table);
+	}
+
+	/**
+	 * The given_entities step should provide a way to wipe existing entity records to ensure the database is in an
+	 * entirely clean state.
+	 *
+	 * @param \Doctrine\ORM\EntityManager          $entity_manager the entity manager
+	 * @param \Ingenerator\BeEntity\Factory        $factory        the entity factory mock
+	 * @param \Ingenerator\BeEntity\FactoryManager $manager        the factory manager mock
+	 * @param \Behat\Gherkin\Node\TableNode        $table          the data table mock
+	 *
+	 * @return void
+	 * @see \Ingenerator\BeEntity\Context\BeEntityContext::given_entities
+	 */
+	public function it_can_purge_entities_before_populating_them_from_a_table_for_clean_state($entity_manager, $factory, $manager, $table)
+	{
+		$manager->create_factory('Dummy')->willReturn($factory);
+		$this->set_factory_manager($manager);
+
+		$table->getHash()->willReturn(array());
+
+		$factory->purge()->shouldBeCalled();
+		$entity_manager->flush()->shouldBeCalled();
+
+		$this->given_entities('only ', 'Dummy', $table);
 	}
 
 	/**

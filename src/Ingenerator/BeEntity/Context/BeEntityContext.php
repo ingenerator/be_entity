@@ -90,15 +90,21 @@ class BeEntityContext extends BehatContext {
 	 *         | foo@foo.com   | 12345678   | yes       |
 	 *         | bar@foo.com   | 12345678   | no        |
 	 *
+	 * @param string    $only     if a true-ish value is passed, will delete all entities before creating new ones
 	 * @param string    $type     the type of entity to load or create
 	 * @param TableNode $entities the details of the identifiers and fields to set
 	 *
-	 * @Given /^the following (?P<type>.+?) entities$/
+	 * @Given /^(?P<only>only|) ?the following (?P<type>.+?) entities$/
 	 * @return void
 	 */
-	public function given_entities($type, TableNode $entities)
+	public function given_entities($only, $type, TableNode $entities)
 	{
 		$factory = $this->get_factory($type);
+
+		if ($only)
+		{
+			$factory->purge();
+		}
 
 		// Iterate over the table and create the entities
 		$entities = $entities->getHash();

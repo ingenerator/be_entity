@@ -154,4 +154,13 @@ abstract class Factory {
 	 */
 	abstract protected function _create($identifier);
 
+	/**
+	 * Implement this method to delete all entities of the type managed by this factory.
+	 *
+	 * For example, you could just issue a DQL delete in this method.
+	 *
+	 * @return void
+	 */
+	abstract public function purge();
+
 }

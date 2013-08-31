@@ -28,12 +28,13 @@ class ExampleSpec extends ObjectBehavior
 	/**
 	 * An entity factory needs a reference to the entity manager
 	 *
-	 * @param \Doctrine\ORM\EntityManager $entity_manager
+	 * @param \Doctrine\ORM\EntityManager          $entity_manager
+	 * @param \Ingenerator\BeEntity\FactoryManager $factory_manager
 	 * @return void
 	 */
-	public function let($entity_manager)
+	public function let($entity_manager, $factory_manager)
 	{
-		$this->beConstructedWith($entity_manager);
+		$this->beConstructedWith($entity_manager, $factory_manager);
 	}
 
 	/**

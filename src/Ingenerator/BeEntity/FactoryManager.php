@@ -57,7 +57,7 @@ class FactoryManager
 	    }
 
 	    // If the class exists, create an instance and inject the entity manager
-	    $factory = new $class($this->entity_manager);
+	    $factory = new $class($this->entity_manager, $this);
 	    return $factory;
     }
 }

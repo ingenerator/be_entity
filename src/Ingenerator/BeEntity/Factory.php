@@ -33,15 +33,22 @@ abstract class Factory {
 	protected $entity_manager = NULL;
 
 	/**
+	 * @var FactoryManager the FactoryManager to use to create any referenced entities
+	 */
+	protected $factory_manager = NULL;
+
+	/**
 	 * Creates an instance and stores the entity manager
 	 *
-	 * @param EntityManager $entity_manager the Doctrine entity manager that will be used to find and persist entities
+	 * @param EntityManager  $entity_manager  the Doctrine entity manager that will be used to find and persist entities
+	 * @param FactoryManager $factory_manager the factory manager to use to create any additional required objects
 	 *
 	 * @return \Ingenerator\BeEntity\Factory
 	 */
-	public function __construct(EntityManager $entity_manager)
+	public function __construct(EntityManager $entity_manager, FactoryManager $factory_manager)
 	{
 		$this->entity_manager = $entity_manager;
+		$this->factory_manager = $factory_manager;
 	}
 
 	/**

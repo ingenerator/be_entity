@@ -114,6 +114,7 @@ class BeEntityContext extends BehatContext {
 	 * @param TableNode $entities the details of the identifiers and fields to set
 	 *
 	 * @Given /^(?P<only>only|) ?the following (?P<type>.+?) entities$/
+	 * @Given /^(?P<only>only|) ?the following (?P<type>.+?) entity$/
 	 * @return void
 	 */
 	public function given_entities($only, $type, TableNode $entities)

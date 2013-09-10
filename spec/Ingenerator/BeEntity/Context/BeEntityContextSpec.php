@@ -69,7 +69,7 @@ class BeEntityContextSpec extends ObjectBehavior
 	}
 
 	/**
-	 * The given_a_simple_entity step should provide a quick way to update an entity where only one field is relevant
+	 * The given_a_simple_entity step should provide a quick way to ensure a named entity exists with any values
 	 *
 	 * @param \Doctrine\ORM\EntityManager          $entity_manager the entity manager
 	 * @param \Ingenerator\BeEntity\Factory        $factory        the entity factory mock
@@ -77,6 +77,28 @@ class BeEntityContextSpec extends ObjectBehavior
 	 *
 	 * @return void
 	 * @see \Ingenerator\BeEntity\Context\BeEntityContext::given_a_simple_entity
+	 */
+	public function it_can_provide_and_flush_a_simple_entity_with_default_fields($entity_manager, $factory, $manager)
+	{
+		$manager->create_factory('Dummy')->willReturn($factory);
+		$this->set_factory_manager($manager);
+
+		// The factory provide method takes care of lookup and creating if required
+		$factory->provide('my-dummy', array())->shouldBeCalled();
+		$entity_manager->flush()->shouldBeCalled();
+
+		$this->given_a_simple_entity('Dummy', 'my-dummy');
+	}
+
+	/**
+	 * The given_a_simple_entity_with step should provide a quick way to update an entity where only one field is relevant
+	 *
+	 * @param \Doctrine\ORM\EntityManager          $entity_manager the entity manager
+	 * @param \Ingenerator\BeEntity\Factory        $factory        the entity factory mock
+	 * @param \Ingenerator\BeEntity\FactoryManager $manager        the factory manager mock
+	 *
+	 * @return void
+	 * @see \Ingenerator\BeEntity\Context\BeEntityContext::given_a_simple_entity_with
 	 */
 	public function it_can_provide_and_flush_a_simple_entity_with_one_relevant_field($entity_manager, $factory, $manager)
 	{
@@ -87,7 +109,7 @@ class BeEntityContextSpec extends ObjectBehavior
 		$factory->provide('my-dummy', array('set-field' => 'new-value'))->shouldBeCalled();
 		$entity_manager->flush()->shouldBeCalled();
 
-		$this->given_a_simple_entity('Dummy', 'my-dummy', 'set-field', 'new-value');
+		$this->given_a_simple_entity_with('Dummy', 'my-dummy', 'set-field', 'new-value');
 	}
 
 	/**

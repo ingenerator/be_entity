@@ -57,6 +57,25 @@ class BeEntityContext extends BehatContext {
 	}
 
 	/**
+	 * Ensures that an entity exists with any values
+	 *
+	 * @param string $type       The type of entity to load or create
+	 * @param string $identifier The identifier for this entity - which can be mapped to be any unique entity property
+	 *
+	 * @Given /^an? (?P<type>.+?) entity "(?P<identifier>[^"]+)"$/
+	 */
+	public function given_a_simple_entity($type, $identifier)
+	{
+		$factory = $this->get_factory($type);
+
+		// Load the entity, or create if missing, and set the required values
+		$factory->provide($identifier, array());
+
+		// Flush the entity manager
+		$this->entity_manager->flush();
+	}
+
+	/**
 	 * Ensures that an entity exists with the value of a single field set to the expected value, creating it if required
 	 *
 	 * @param string $type       The type of entity to load or create
@@ -66,7 +85,7 @@ class BeEntityContext extends BehatContext {
 	 *
 	 * @Given /^a (?P<type>.+?) entity "(?P<identifier>[^"]+)" with (?P<field>.+?) "(?P<value>[^"]+)"$/
 	 */
-	public function given_a_simple_entity($type, $identifier, $field, $value)
+	public function given_a_simple_entity_with($type, $identifier, $field, $value)
 	{
 		$factory = $this->get_factory($type);
 

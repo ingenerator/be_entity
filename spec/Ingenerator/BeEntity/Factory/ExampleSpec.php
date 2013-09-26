@@ -196,4 +196,52 @@ class ExampleSpec extends ObjectBehavior
 		$this->purge();
 	}
 
+	/**
+	 * @param \Doctrine\ORM\EntityManager    $entity_manager
+	 * @param \Doctrine\ORM\EntityRepository $repository
+	 *
+	 * @return void
+	 */
+	public function its_matches_method_returns_null_if_entity_does_not_exist($entity_manager, $repository)
+	{
+		$entity_manager->getRepository('Ingenerator\BeEntity\Factory\ExampleEntity')->willReturn($repository);
+		$repository->findOneBy(array('foo_field' => 'bar'))->willReturn(NULL);
+
+		$this->matches('bar', array('bar_field' => 'foo'))->shouldReturn(NULL);
+	}
+
+	/**
+	 * @param \Doctrine\ORM\EntityManager    $entity_manager
+	 * @param \Doctrine\ORM\EntityRepository $repository
+	 * @param \Ingenerator\BeEntity\Factory\ExampleEntity $foo_entity
+	 *
+	 * @return void
+	 */
+	public function its_matches_method_returns_true_if_entity_matches($entity_manager, $repository, $foo_entity)
+	{
+		$entity_manager->getRepository('Ingenerator\BeEntity\Factory\ExampleEntity')->willReturn($repository);
+		$repository->findOneBy(array('foo_field' => 'bar'))->willReturn($foo_entity);
+
+		$foo_entity->get_bar_field()->willReturn('foo');
+
+		$this->matches('bar', array('bar_field' => 'foo'))->shouldReturn(TRUE);
+	}
+
+	/**
+	 * @param \Doctrine\ORM\EntityManager    $entity_manager
+	 * @param \Doctrine\ORM\EntityRepository $repository
+	 * @param \Ingenerator\BeEntity\Factory\ExampleEntity $foo_entity
+	 *
+	 * @return void
+	 */
+	public function its_matches_method_returns_array_of_differences_if_entity_does_not_match($entity_manager, $repository, $foo_entity)
+	{
+		$entity_manager->getRepository('Ingenerator\BeEntity\Factory\ExampleEntity')->willReturn($repository);
+		$repository->findOneBy(array('foo_field' => 'bar'))->willReturn($foo_entity);
+
+		$foo_entity->get_bar_field()->willReturn('wrong');
+
+		$this->matches('bar', array('bar_field' => 'foo'))->shouldReturn(array('bar_field' => array('exp' => 'foo', 'got' => 'wrong')));
+	}
+
 }

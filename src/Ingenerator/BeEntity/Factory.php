@@ -116,6 +116,45 @@ abstract class Factory {
 	}
 
 	/**
+	 * Test if an entity exists and if its fields match the provided array (only fields specified in the array will be
+	 * compared).
+	 *
+	 * @param string $identifier the identifier used to locate an entity
+	 * @param array  $fields     the fields to check
+	 *
+	 * @return array|bool NULL if not found, TRUE if matches, array of differences if exists but doesn't match
+	 */
+	public function matches($identifier, $fields = array())
+	{
+		// Return NULL if the entity does not exist
+		if ( ! $entity = $this->locate($identifier, FALSE))
+		{
+			return NULL;
+		}
+
+		// Compare fields and build a difference
+		//@todo: Support underscored and camelCase getter names
+		$diff = array();
+		foreach ($fields as $field => $expected)
+		{
+			$getter = 'get_'.$field;
+			$actual = $entity->$getter();
+			if ($actual != $expected) {
+				$diff[$field] = array('exp' => $expected, 'got' => $actual);
+			}
+		}
+
+		if ($diff)
+		{
+			return $diff;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+
+	/**
 	 * Sets fields to the expected values by calling their setters. Currently expects your entities to use underscored
 	 * setters - for eg if you specify a `password` field in your feature file this method will call set_password.
 	 * After setting fields, persists but does not flush the entity.

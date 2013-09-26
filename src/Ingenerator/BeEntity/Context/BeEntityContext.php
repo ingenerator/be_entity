@@ -11,6 +11,7 @@ namespace Ingenerator\BeEntity\Context;
 use Behat\Behat\Context\BehatContext;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\ORM\EntityManager;
+use Ingenerator\BeEntity\Exception\ExpectationException;
 use Ingenerator\BeEntity\Exception\UnexpectedEntityException;
 use Ingenerator\BeEntity\FactoryManager;
 
@@ -148,10 +149,13 @@ class BeEntityContext extends BehatContext {
 	 *
 	 * @throws UnexpectedEntityException
 	 * @Given /^no (?P<type>.+?) entity "(?P<identifier>[^"]+)"$/
-	 * @Then  /^there should not be a "(<?P<identifier>[^"]+)" (<?P<type>.+?) entity$/
+	 * @Then  /^there should not be a "(?P<identifier>[^"]+)" (?P<type>.+?) entity$/
 	 */
 	public function given_no_entity($type, $identifier)
 	{
+		// Reset the entity manager
+		$this->entity_manager->clear();
+
 		// Attempt to locate the entity
 		$factory = $this->get_factory($type);
 		$entity = $factory->locate($identifier, FALSE);
@@ -160,6 +164,56 @@ class BeEntityContext extends BehatContext {
 		if ($entity !== NULL)
 		{
 			throw new UnexpectedEntityException("Did not expect to find a '$type' entity for '$identifier'");
+		}
+	}
+
+	/**
+	 * Verify that a specified set of entities exist and have the specified field values
+	 *
+	 * @param string    $type              The entity type to load
+	 * @param TableNode $expected_entities The values of entities that are expected
+	 *
+	 * @throws \Ingenerator\BeEntity\Exception\ExpectationException
+	 * @Then  /^the following (?P<type>.+?) entities should exist:$/
+	 */
+	public function assert_entities($type, TableNode $expected_entities)
+	{
+		// Reset the entity manager
+		$this->entity_manager->clear();
+
+		$factory = $this->get_factory($type);
+
+		$problems = array();
+		foreach ($expected_entities->getHash() as $expected)
+		{
+			// The identifier is the first column
+			$identifier = array_shift($expected);
+			$match = $factory->matches($identifier, $expected);
+
+			if ($match === NULL)
+			{
+				$problems[] = "'$identifier' was not found";
+			}
+			elseif (is_array($match))
+			{
+				foreach ($match as $field => $difference)
+				{
+					$problems[] = sprintf(
+						"'%s':%s did not match - expected '%s', got '%s'",
+						$identifier,
+						$field,
+						$difference['exp'],
+						$difference['got']
+					);
+				}
+			}
+		}
+
+		if ($problems)
+		{
+			throw new ExpectationException(
+				'Entities found did not match expectations:'.PHP_EOL."\t".implode(PHP_EOL."\t", $problems)
+			);
 		}
 	}
 

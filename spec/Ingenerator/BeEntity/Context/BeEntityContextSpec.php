@@ -182,14 +182,18 @@ class BeEntityContextSpec extends ObjectBehavior
 	 *
 	 * @param \Ingenerator\BeEntity\Factory        $factory the entity factory mock
 	 * @param \Ingenerator\BeEntity\FactoryManager $manager the factory manager mock
+	 * @param \Doctrine\ORM\EntityManager $entity_manager the entity manager
 	 *
 	 * @return void
 	 * @see \Ingenerator\BeEntity\Context\BeEntityContext::given_no_entity
 	 */
-	public function it_can_verify_there_is_no_entity_with_a_given_title($factory, $manager)
+	public function it_can_verify_there_is_no_entity_with_a_given_title($factory, $manager, $entity_manager)
 	{
 		$manager->create_factory('Dummy')->willReturn($factory);
 		$this->set_factory_manager($manager);
+
+		// The entity manager should be cleared to ensure values are reloaded from DB
+		$entity_manager->clear()->shouldBeCalled();
 
 		// When an entity cannot be located then the method should do nothing
 		$factory->locate('not-existing-dummy', FALSE)->willReturn(NULL);
@@ -199,6 +203,68 @@ class BeEntityContextSpec extends ObjectBehavior
 		$factory->locate('this dummy should not exist', FALSE)->willReturn(new \StdClass);
 		$this->shouldThrow('\Ingenerator\BeEntity\Exception\UnexpectedEntityException')
 			->during('given_no_entity', array('Dummy', 'this dummy should not exist'));
+	}
+
+	/**
+	 * The assert_entities step should verify that entities exist
+	 *
+	 * @param \Ingenerator\BeEntity\Factory        $factory the entity factory mock
+	 * @param \Ingenerator\BeEntity\FactoryManager $manager the factory manager mock
+ 	 * @param \Doctrine\ORM\EntityManager $entity_manager the entity manager
+	 *
+	 * @return void
+	 * @see \Ingenerator\BeEntity\Context\BeEntityContext::assert_entities
+	 */
+	public function it_can_verify_that_expected_entities_exist($factory, $manager, $entity_manager)
+	{
+		$manager->create_factory('Dummy')->willReturn($factory);
+		$this->set_factory_manager($manager);
+
+		// The entity does not exist
+		$factory->matches('not existing dummy', array('active' => 'y', 'foo' => 'bar'))->willReturn(NULL);
+
+		// Stub some entity data that would be specified in the table
+		$data_1 = array('title' => 'not existing dummy', 'active' => 'y', 'foo' => 'bar');
+		$table = new TableNode();
+		$table->addRow(array_keys($data_1));
+		$table->addRow($data_1);
+
+		$entity_manager->clear()->shouldBeCalled();
+
+		$this->shouldThrow('\Ingenerator\BeEntity\Exception\ExpectationException')
+			->during('assert_entities', array('Dummy', $table));
+	}
+
+	/**
+	 * The assert_entities step should verify that entities have expected values
+	 *
+	 * @param \Ingenerator\BeEntity\Factory        $factory the entity factory mock
+	 * @param \Ingenerator\BeEntity\FactoryManager $manager the factory manager mock
+  	 * @param \Doctrine\ORM\EntityManager $entity_manager the entity manager
+	 *
+	 * @return void
+	 * @see \Ingenerator\BeEntity\Context\BeEntityContext::assert_entities
+	 */
+	public function it_can_verify_that_expected_entities_have_expected_values($factory, $manager, $entity_manager)
+	{
+		$manager->create_factory('Dummy')->willReturn($factory);
+		$this->set_factory_manager($manager);
+
+		// The entity exists but has invalid values
+		$factory->matches('not existing dummy', array('active' => 'y', 'foo' => 'bar'))
+			->willReturn(array('foo' => array('exp' => 'bar', 'got' => 'foo')));
+
+		// Stub some entity data that would be specified in the table
+		$data_1 = array('title' => 'not existing dummy', 'active' => 'y', 'foo' => 'bar');
+		$table = new TableNode();
+		$table->addRow(array_keys($data_1));
+		$table->addRow($data_1);
+
+		// The entity manager should be cleared to ensure values are reloaded from DB
+		$entity_manager->clear()->shouldBeCalled();
+
+		$this->shouldThrow('\Ingenerator\BeEntity\Exception\ExpectationException')
+			->during('assert_entities', array('Dummy', $table));
 	}
 
 }

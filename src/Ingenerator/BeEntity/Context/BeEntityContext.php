@@ -70,10 +70,12 @@ class BeEntityContext extends BehatContext {
 		$factory = $this->get_factory($type);
 
 		// Load the entity, or create if missing, and set the required values
-		$factory->provide($identifier, array());
+		$entity = $factory->provide($identifier, array());
 
 		// Flush the entity manager
 		$this->entity_manager->flush();
+
+		return $entity;
 	}
 
 	/**
@@ -91,10 +93,12 @@ class BeEntityContext extends BehatContext {
 		$factory = $this->get_factory($type);
 
 		// Load the entity, or create if missing, and set the required values
-		$factory->provide($identifier, array($field => $value));
+		$entity = $factory->provide($identifier, array($field => $value));
 
 		// Flush the entity manager
 		$this->entity_manager->flush();
+
+		return $entity;
 	}
 
 	/**

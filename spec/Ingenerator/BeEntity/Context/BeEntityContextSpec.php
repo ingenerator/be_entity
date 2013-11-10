@@ -84,10 +84,11 @@ class BeEntityContextSpec extends ObjectBehavior
 		$this->set_factory_manager($manager);
 
 		// The factory provide method takes care of lookup and creating if required
-		$factory->provide('my-dummy', array())->shouldBeCalled();
+		$e = new \stdClass();
+		$factory->provide('my-dummy', array())->willReturn($e)->shouldBeCalled();
 		$entity_manager->flush()->shouldBeCalled();
 
-		$this->given_a_simple_entity('Dummy', 'my-dummy');
+		$this->given_a_simple_entity('Dummy', 'my-dummy')->shouldReturn($e);
 	}
 
 	/**
@@ -106,10 +107,11 @@ class BeEntityContextSpec extends ObjectBehavior
 		$this->set_factory_manager($manager);
 
 		// The factory provide method takes care of lookup and creating if required
-		$factory->provide('my-dummy', array('set-field' => 'new-value'))->shouldBeCalled();
+		$e = new \stdClass();
+		$factory->provide('my-dummy', array('set-field' => 'new-value'))->willReturn($e)->shouldBeCalled();
 		$entity_manager->flush()->shouldBeCalled();
 
-		$this->given_a_simple_entity_with('Dummy', 'my-dummy', 'set-field', 'new-value');
+		$this->given_a_simple_entity_with('Dummy', 'my-dummy', 'set-field', 'new-value')->shouldReturn($e);
 	}
 
 	/**

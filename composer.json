@@ -16,8 +16,8 @@
 
     "require": {
         "php":              ">=5.5",
-        "behat/behat":      ">=2.4",
-        "doctrine/orm":     ">=2.3"
+        "behat/behat":      "^2.4",
+        "doctrine/orm":     "^2.3"
     },
 
     "require-dev": {

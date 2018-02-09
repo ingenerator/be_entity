@@ -6,4 +6,4 @@ before_script:
   - composer self-update
   - composer install
 
-script: bin/phpspec --format pretty
+script: bin/phpspec run --format pretty

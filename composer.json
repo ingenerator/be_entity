@@ -4,7 +4,7 @@
     "keywords":     ["web", "testing", "behat", "doctrine2"],
     "homepage":     "http://github.com/ingenerator/be_entity",
     "type":         "library",
-    "license":      "BSD",
+    "license":      "BSD-3-Clause",
 
     "authors": [
         {

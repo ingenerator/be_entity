@@ -8,3 +8,6 @@ before_script:
   - composer install
 
 script: bin/phpspec run --format pretty
+
+notifications:
+  email: false

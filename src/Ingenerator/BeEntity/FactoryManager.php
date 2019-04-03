@@ -51,7 +51,7 @@ class FactoryManager
     {
 	    // Check the class exists
 	    $class = "Ingenerator\\BeEntity\\Factory\\$type";
-	    if ( ! class_exists($class))
+	    if ( ! \class_exists($class))
 	    {
 		    throw new MissingFactoryException("The entity factory class '$class' is not defined (or cannot be found)");
 	    }

@@ -92,7 +92,7 @@ abstract class Factory {
 		$entity = $this->_locate($identifier);
 		if ($required AND ($entity === NULL))
 		{
-			throw new MissingEntityException(get_class($this)." could not locate an entity for '$identifier'");
+			throw new MissingEntityException(\get_class($this)." could not locate an entity for '$identifier'");
 		}
 		return $entity;
 	}

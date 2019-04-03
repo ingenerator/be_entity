@@ -136,7 +136,7 @@ class BeEntityContext extends BehatContext {
 		foreach ($entities as $entity_values)
 		{
 			// The identifier is the first column of the table
-			$identifier = reset($entity_values);
+			$identifier = \reset($entity_values);
 			$factory->provide($identifier, $entity_values);
 		}
 
@@ -191,18 +191,18 @@ class BeEntityContext extends BehatContext {
 		foreach ($expected_entities->getHash() as $expected)
 		{
 			// The identifier is the first column
-			$identifier = array_shift($expected);
+			$identifier = \array_shift($expected);
 			$match = $factory->matches($identifier, $expected);
 
 			if ($match === NULL)
 			{
 				$problems[] = "'$identifier' was not found";
 			}
-			elseif (is_array($match))
+			elseif (\is_array($match))
 			{
 				foreach ($match as $field => $difference)
 				{
-					$problems[] = sprintf(
+					$problems[] = \sprintf(
 						"'%s':%s did not match - expected '%s', got '%s'",
 						$identifier,
 						$field,
@@ -216,7 +216,7 @@ class BeEntityContext extends BehatContext {
 		if ($problems)
 		{
 			throw new ExpectationException(
-				'Entities found did not match expectations:'.PHP_EOL."\t".implode(PHP_EOL."\t", $problems)
+				'Entities found did not match expectations:'.PHP_EOL."\t".\implode(PHP_EOL."\t", $problems)
 			);
 		}
 	}

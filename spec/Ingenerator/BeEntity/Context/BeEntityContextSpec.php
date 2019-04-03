@@ -135,7 +135,7 @@ class BeEntityContextSpec extends ObjectBehavior
 		$data_2 = array('title' => 'This is title 2', 'active' => TRUE, 'custom' => 'other2');
 		$data_3 = array('title' => 'This is title 3', 'active' => FALSE, 'custom' => 'other3');
 		$table = new TableNode();
-		$table->addRow(array_keys($data_1));
+		$table->addRow(\array_keys($data_1));
 		$table->addRow($data_1);
 		$table->addRow($data_2);
 		$table->addRow($data_3);
@@ -228,7 +228,7 @@ class BeEntityContextSpec extends ObjectBehavior
 		// Stub some entity data that would be specified in the table
 		$data_1 = array('title' => 'not existing dummy', 'active' => 'y', 'foo' => 'bar');
 		$table = new TableNode();
-		$table->addRow(array_keys($data_1));
+		$table->addRow(\array_keys($data_1));
 		$table->addRow($data_1);
 
 		$entity_manager->clear()->shouldBeCalled();
@@ -259,7 +259,7 @@ class BeEntityContextSpec extends ObjectBehavior
 		// Stub some entity data that would be specified in the table
 		$data_1 = array('title' => 'not existing dummy', 'active' => 'y', 'foo' => 'bar');
 		$table = new TableNode();
-		$table->addRow(array_keys($data_1));
+		$table->addRow(\array_keys($data_1));
 		$table->addRow($data_1);
 
 		// The entity manager should be cleared to ensure values are reloaded from DB
